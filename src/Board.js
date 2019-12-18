@@ -79,14 +79,35 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // get row at given rowIndex
+      var row = this.get(rowIndex);
+      // create variable to store count of conflicts at given row
+      var count = 0;
+      // iterate over row
+      for (var i= 0; i < row.length; i++) {
+        // increment count by 1 for each conflict
+        if (row[i] === 1) {
+          count ++;
+        }
+      }
+      // return whether count is greater than 1
+      return count > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      // get number of rows on board
+      var rows = this.get('n');
+      // iterate over number of rows on board
+      for (var i = 0; i < rows; i++) {
+        // check each row if there are any row conflicts
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      }
+      // otherwise, there are no row conflicts
+      return false;
     },
-
 
 
     // COLUMNS - run from top to bottom
@@ -94,14 +115,38 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      // get number of rows on board
+      var rows = this.get('n');
+      // create variable to store count of conflicts at given column
+      var count = 0;
+      // iterate over number of rows on board
+      for (var i = 0; i < rows; i++) {
+        // get current row
+        var row = this.get(i);
+        // check if current row at input colIndex has any conflicts
+        if (row[colIndex] === 1) {
+          count ++;
+        }
+      }
+      // return whether count is greater than 1
+      return count > 1
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      // get number of rows on board
+      var rows = this.get('n');
+      // create count variable
+      var count = 0;
+      // iterate over number of rows on board
+      for (var i = 0; i < rows; i++) {
+        // check each column if there are any conflicts
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     },
-
 
 
     // Major Diagonals - go from top-left to bottom-right
@@ -109,14 +154,43 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var rows = this.get('n'); // get num of rows on board
+      var count = 0; // create variable for count of conflicts
+      var rowIndex;
+      var colIndex = majorDiagonalColumnIndexAtFirstRow
+      // iterate over number of rows
+      for (rowIndex = 0; rowIndex < rows; rowIndex++) {
+        // get current row
+        var row = this.get(rowIndex);
+        // check if colIndex at current row has a conflict
+        if (row[colIndex] === 1) {
+          count ++; //increment count by 1
+        }
+        colIndex += 1; // increment colIndex
+      }
+      // check whether there are more than 1 conflict
+      return count > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var size = this.get('n'); // get num of rows/cols on board
+      // iterate over major diagonal column indices at first row
+      for (var colIndex = 0; colIndex < size; colIndex++) {
+        // check if each column index has any major diagonal conflicts
+        if (this.hasMajorDiagonalConflictAt(colIndex)) {
+          return true;
+        }
+      }
+      // iterate over major diagonal row indices at first column
+      for (var rowIndex = 0; rowIndex < size; rowIndex++) {
+        // check if each row index has any major diagonal conflicts
+        if (this.hasMajorDiagonalConflictAt(rowIndex)) {
+          return true;
+        }
+      }
+      return false;
     },
-
 
 
     // Minor Diagonals - go from top-right to bottom-left
