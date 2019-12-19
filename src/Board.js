@@ -45,8 +45,8 @@
       return (
         this.hasRowConflictAt(rowIndex) ||
         this.hasColConflictAt(colIndex) ||
-        this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
-        this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
+        this.hasMajorDiagonalConflictAt(rowIndex, colIndex) ||
+        this.hasMinorDiagonalConflictAt(rowIndex, colIndex)
       );
     },
 
@@ -154,13 +154,19 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(row, col) {
+
       var length = this.get('n'); // set length to size of row
+
+      // check if the row and col index is not a major diagonal column index at first row or major diagonal row index at first column
+      // while both col and row index is greater than 0, decrement until one is equal to 0
+      while (col > 0 && row > 0) {
+        row--;
+        col--;
+      }
+
       var loops = length; // default loops to length
       if (col > 0) { // when checking the major diagonal col index at first row
         loops = length - col;
-      }
-      if (col > 0 && row > 0) {
-        alert('This is not a valid input!');
       }
       var count = 0; // create variable for count of conflicts
       // iterate over loops
@@ -174,6 +180,7 @@
         col += 1; // increment colIndex
       }
       // check whether there are more than 1 conflict
+      // console.log('count', count);
       return count > 1;
     },
 
@@ -196,12 +203,18 @@
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(row, col) {
       var length = this.get('n'); // set length to size of row
+      // check if row and col index is not a minor diagonal col index in first row or minor diagonal row index in first col
+      console.log('----------------------------------------');
+      console.log(`before: ${row}, ${col}`);
+      // increment col and decrement row until either col is length or row is 0
+      while (col < length - 1 && row > 0) {
+        col++;
+        row--;
+      }
+      console.log(`after: ${row}, ${col}`);
       var loops = length; // default loops to length
       if (row === 0) { // when checking the minor diagonal column index at first row
         loops = col + 1;
-      }
-      if (col < length && row > 0) {
-        alert('This is not a valid input!');
       }
       var count = 0; // create variable for count of conflicts
       // iterate over loops
@@ -214,13 +227,21 @@
         }
         col -= 1; // decrement colIndex
       }
+      console.log(`count: ${count}`);
       // check whether there are more than 1 conflict
       return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      var length = this.get('n'); // get num of rows/cols on board
+      // iterate over length
+      for (var i = 0; i < length; i++) {
+        if (this.hasMinorDiagonalConflictAt(0, i) || this.hasMinorDiagonalConflictAt(i, length - 1)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
