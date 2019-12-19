@@ -129,7 +129,7 @@
         }
       }
       // return whether count is greater than 1
-      return count > 1
+      return count > 1;
     },
 
     // test if any columns on this board contain conflicts
@@ -153,20 +153,25 @@
     // --------------------------------------------------------------
     //
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      var rows = this.get('n'); // get num of rows on board
+    hasMajorDiagonalConflictAt: function(row, col) {
+      var length = this.get('n'); // set length to size of row
+      var loops = length; // default loops to length
+      if (col > 0) { // when checking the major diagonal col index at first row
+        loops = length - col;
+      }
+      if (col > 0 && row > 0) {
+        alert('This is not a valid input!');
+      }
       var count = 0; // create variable for count of conflicts
-      var rowIndex;
-      var colIndex = majorDiagonalColumnIndexAtFirstRow
-      // iterate over number of rows
-      for (rowIndex = 0; rowIndex < rows; rowIndex++) {
+      // iterate over loops
+      for (row; row < loops; row++) {
         // get current row
-        var row = this.get(rowIndex);
-        // check if colIndex at current row has a conflict
-        if (row[colIndex] === 1) {
+        var currentRow = this.get(row);
+        // check if col at current row has a conflict
+        if (currentRow[col] === 1) {
           count ++; //increment count by 1
         }
-        colIndex += 1; // increment colIndex
+        col += 1; // increment colIndex
       }
       // check whether there are more than 1 conflict
       return count > 1;
@@ -174,18 +179,10 @@
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      var size = this.get('n'); // get num of rows/cols on board
-      // iterate over major diagonal column indices at first row
-      for (var colIndex = 0; colIndex < size; colIndex++) {
-        // check if each column index has any major diagonal conflicts
-        if (this.hasMajorDiagonalConflictAt(colIndex)) {
-          return true;
-        }
-      }
-      // iterate over major diagonal row indices at first column
-      for (var rowIndex = 0; rowIndex < size; rowIndex++) {
-        // check if each row index has any major diagonal conflicts
-        if (this.hasMajorDiagonalConflictAt(rowIndex)) {
+      var length = this.get('n'); // get num of rows/cols on board
+      // iterate over length
+      for (var i = 0; i < length; i++) {
+        if (this.hasMajorDiagonalConflictAt(0, i) || this.hasMajorDiagonalConflictAt(i, 0)) {
           return true;
         }
       }
@@ -197,8 +194,28 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    hasMinorDiagonalConflictAt: function(row, col) {
+      var length = this.get('n'); // set length to size of row
+      var loops = length; // default loops to length
+      if (row === 0) { // when checking the minor diagonal column index at first row
+        loops = col + 1;
+      }
+      if (col < length && row > 0) {
+        alert('This is not a valid input!');
+      }
+      var count = 0; // create variable for count of conflicts
+      // iterate over loops
+      for (row; row < loops; row++) {
+        // get current row
+        var currentRow = this.get(row);
+        // check if col at current row has a conflict
+        if (currentRow[col] === 1) {
+          count ++; //increment count by 1
+        }
+        col -= 1; // decrement colIndex
+      }
+      // check whether there are more than 1 conflict
+      return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
