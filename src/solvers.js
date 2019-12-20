@@ -13,11 +13,12 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
+let test = 0;
 
 window.findNRooksSolution = function(n) {
-  
   var board = new Board({n: n});
   var level = 0;
+  test += 1;
   var recurse = function() {
     // iterate over length of each level. one loop for each level
     for (var i = 0; i < n; i++) {
@@ -28,12 +29,12 @@ window.findNRooksSolution = function(n) {
         board.togglePiece(level, i); // toggle off piece
       } else { // if there is no conflicts at index
         if (level === n - 1) { // if level is at the end
-          solution = board;
-          console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-          return solution;
+          let tempSolution = Object.values(board.attributes).slice(0, Object.values(board.attributes).length - 1);
+          console.log('Single solution for ' + n + ' rooks:', JSON.stringify(tempSolution));
+          return tempSolution;
         } else { // otherwise, recurse down and add 1 to level
           level ++;
-          recurse(); // call recurse again until it finds solution or i = n
+          return recurse(); // call recurse again until it finds solution or i = n
         }
       }
     }
@@ -48,8 +49,44 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
-
+  var solutionCount = 0; //fixme
+  var board = new Board({n: n});
+  var level = 0;
+  test += 1;
+  var recurse = function() {
+    // iterate over length of each level. one loop for each level
+    for (var i = 0; i < n; i++) {
+      // toogle piece onto the level row and i col
+      board.togglePiece(level, i);
+      // if there is conflicts at this index
+      if (board.hasAnyRooksConflicts()) {
+        board.togglePiece(level, i); // toggle off piece
+      } else { // if there is no conflicts at index
+        if (level === n - 1) { // if level is at the end
+          solutionCount += 1;
+          // toggle off piece at current level
+          board.togglePiece(level, i);
+          // decrement level
+          level --;
+          if (level > 0) {
+            // toggle off previous level rook
+            var row = board.get(level);
+            for (var i = 0; i < n; i++) {
+              if (board.attributes[i] === 1) {
+                board.togglePiece(level, i);
+              }
+            }
+          }
+          break;
+        } else { // otherwise, recurse down and add 1 to level
+          level ++;
+          return recurse(); // call recurse again until it finds solution or i = n
+        }
+      }
+    }
+    level --; //decrement level at end of for loop.
+  };
+  recurse();
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
