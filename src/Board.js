@@ -29,13 +29,13 @@
       this.trigger('change');
     },
 
-    _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
-      return colIndex - rowIndex;
-    },
+    // _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
+    //   return colIndex - rowIndex;
+    // },
 
-    _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
-      return colIndex + rowIndex;
-    },
+    // _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
+    //   return colIndex + rowIndex;
+    // },
 
     hasAnyRooksConflicts: function() {
       return this.hasAnyRowConflicts() || this.hasAnyColConflicts();
